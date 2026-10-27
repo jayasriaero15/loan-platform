@@ -1,0 +1,6 @@
+image: postgres:16-alpine
+database: loansdb
+# DEMO ONLY. In real life use Secret Manager / External Secrets / Sealed Secrets - never commit passwords.
+username: loan
+password: loan-demo-pass
+storage: 5Gi

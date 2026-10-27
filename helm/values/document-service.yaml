@@ -1,0 +1,12 @@
+appName: document-service
+version: v1
+replicaCount: 2
+image:
+  repository: docker.io/YOUR_DOCKERHUB_USER/document-service
+  tag: "1.0.0"
+env:
+  DOCUMENT_SIMULATED_DELAY_MS: "0"   # set e.g. "3000" later to demo the Dynatrace bottleneck
+  DB_URL: jdbc:postgresql://postgres:5432/loansdb
+secretEnv:
+  - { name: DB_USER,     secretName: postgres-credentials, key: DB_USER }
+  - { name: DB_PASSWORD, secretName: postgres-credentials, key: DB_PASSWORD }

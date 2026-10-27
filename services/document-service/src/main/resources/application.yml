@@ -1,0 +1,38 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: document-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/loansdb}
+    username: ${DB_USER:loan}
+    password: ${DB_PASSWORD:loan}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  metrics:
+    tags:
+      application: document-service
+
+app:
+  version: ${APP_VERSION:1.0.0}
+
+spring.servlet.multipart.max-file-size: 10MB
+spring.servlet.multipart.max-request-size: 10MB
+
+document:
+  storage-dir: ${DOCUMENT_STORAGE_DIR:/tmp/uploads}
+  # Inject latency to demo the "slow service" trace finding in Dynatrace
+  simulated-delay-ms: ${DOCUMENT_SIMULATED_DELAY_MS:0}

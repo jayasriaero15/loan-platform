@@ -1,0 +1,23 @@
+server {
+    listen 8080;
+    resolver ${DNS_RESOLVER} valid=10s;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location = /healthz { return 200 'ok'; add_header Content-Type text/plain; }
+
+    location /api/loans {
+        set $loan http://loan-service:8080;
+        proxy_pass $loan;
+    }
+    location /api/customers {
+        set $cust http://customer-service:8080;
+        proxy_pass $cust;
+    }
+    location /api/documents {
+        client_max_body_size 10m;
+        set $doc http://document-service:8080;
+        proxy_pass $doc;
+    }
+}

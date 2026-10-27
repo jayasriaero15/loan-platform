@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digital Loan Portal</title>
+<style>
+  body{font-family:system-ui,sans-serif;max-width:640px;margin:2rem auto;padding:0 1rem;color:#1a1a1a}
+  fieldset{margin-bottom:1.5rem;border:1px solid #ccc;border-radius:8px}
+  label{display:block;margin:.6rem 0 .2rem;font-size:.9rem}
+  input,select,button{padding:.5rem;width:100%;box-sizing:border-box}
+  button{margin-top:1rem;background:#0b5ed7;color:#fff;border:0;border-radius:6px;cursor:pointer}
+  pre{background:#f4f4f4;padding:1rem;border-radius:6px;overflow:auto}
+</style>
+</head>
+<body>
+<h1>Personal Loan Portal</h1>
+
+<fieldset>
+  <legend>1. Upload KYC document</legend>
+  <label>Customer ID</label><input id="kycCustomer" type="number" value="1">
+  <label>Document type</label>
+  <select id="docType"><option>PAN</option><option>AADHAAR</option><option>PAYSLIP</option></select>
+  <label>File</label><input id="kycFile" type="file">
+  <button onclick="uploadDoc()">Upload</button>
+</fieldset>
+
+<fieldset>
+  <legend>2. Apply for a loan</legend>
+  <label>Customer ID</label><input id="customerId" type="number" value="1">
+  <label>Amount</label><input id="amount" type="number" value="500000">
+  <label>Tenure (months)</label><input id="tenure" type="number" value="36">
+  <label>Purpose</label><input id="purpose" value="Home renovation">
+  <button onclick="applyLoan()">Apply</button>
+</fieldset>
+
+<h3>Result</h3>
+<pre id="out">-</pre>
+
+<script>
+const out = document.getElementById('out');
+const show = async (r) => { out.textContent = r.status + '\n' + JSON.stringify(await r.json().catch(() => ({})), null, 2); };
+
+function uploadDoc() {
+  const f = document.getElementById('kycFile').files[0];
+  if (!f) { out.textContent = 'Choose a file first'; return; }
+  const fd = new FormData();
+  fd.append('customerId', document.getElementById('kycCustomer').value);
+  fd.append('docType', document.getElementById('docType').value);
+  fd.append('file', f);
+  fetch('/api/documents', { method: 'POST', body: fd }).then(show);
+}
+
+function applyLoan() {
+  fetch('/api/loans', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      customerId: Number(document.getElementById('customerId').value),
+      amount: Number(document.getElementById('amount').value),
+      tenureMonths: Number(document.getElementById('tenure').value),
+      purpose: document.getElementById('purpose').value
+    })
+  }).then(show);
+}
+</script>
+</body>
+</html>

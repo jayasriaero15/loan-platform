@@ -1,0 +1,20 @@
+appName: frontend
+version: v1
+replicaCount: 2
+image:
+  repository: docker.io/YOUR_DOCKERHUB_USER/frontend
+  tag: "1.0.0"
+containerPort: 8080
+service:
+  enabled: true
+  type: LoadBalancer      # switch to ClusterIP when Istio Ingress Gateway is added
+  port: 80
+env: {}
+probes:
+  liveness:  { path: /healthz, initialDelaySeconds: 5, periodSeconds: 10 }
+  readiness: { path: /healthz, initialDelaySeconds: 3, periodSeconds: 5 }
+metrics:
+  enabled: false
+resources:
+  requests: { cpu: 50m, memory: 64Mi }
+  limits:   { cpu: 200m, memory: 128Mi }

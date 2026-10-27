@@ -1,0 +1,36 @@
+# Logical app name -> pod label "app", Service name, container name
+appName: ""
+# Deployment "version" label. Use v1 / v2 for Istio canary (one release per version).
+version: v1
+replicaCount: 2
+
+image:
+  repository: ""        # e.g. docker.io/<user>/loan-service or <region>-docker.pkg.dev/<proj>/<repo>/loan-service
+  tag: ""               # e.g. 1.2.0  (CI bumps this value in the GitOps repo)
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+
+containerPort: 8080
+
+# Create the Service only once per app (set false on the canary release)
+service:
+  enabled: true
+  type: ClusterIP
+  port: 8080
+
+# Plain env vars
+env: {}
+# Env vars from Secrets: - {name: DB_USER, secretName: postgres-credentials, key: DB_USER}
+secretEnv: []
+
+probes:
+  liveness:  { path: /actuator/health/liveness,  initialDelaySeconds: 40, periodSeconds: 10 }
+  readiness: { path: /actuator/health/readiness, initialDelaySeconds: 20, periodSeconds: 5 }
+
+metrics:
+  enabled: true
+  path: /actuator/prometheus
+
+resources:
+  requests: { cpu: 100m, memory: 384Mi }
+  limits:   { cpu: 500m, memory: 768Mi }

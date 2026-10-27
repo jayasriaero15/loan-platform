@@ -1,0 +1,17 @@
+{{- if .Values.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.appName }}
+  labels:
+    app: {{ .Values.appName }}
+    app.kubernetes.io/part-of: loan-platform
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: {{ .Values.appName }}      # selects ALL versions (v1+v2) -> Istio splits traffic
+  ports:
+    - name: http                    # "http" name lets Istio detect the protocol
+      port: {{ .Values.service.port }}
+      targetPort: http
+{{- end }}
