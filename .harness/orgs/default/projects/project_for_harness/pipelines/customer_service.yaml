@@ -1,0 +1,11 @@
+pipeline:
+  stages:
+    - steps:
+        - run:
+            script: "git clone https://github.com/jayasriaero15/loan-platform.git && mvn -f
+              services/customer-service/pom.xml -B clean package #"
+            shell: bash
+          name: git clone and maven build
+          id: git_clone_and_maven_build
+      name: git clone and build
+      id: git_clone_and_build
