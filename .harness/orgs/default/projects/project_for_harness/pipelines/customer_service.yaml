@@ -33,3 +33,32 @@ pipeline:
               context: loan-platform/services/customer-service
       name: git clone and build
       id: git_clone_and_build
+    - name: Deploy Kubernetes_customer_service
+      id: Deploy_Kubernetes_customer_service
+      service:
+        type: kubernetes
+        items:
+          - service_kubernetes_customer_service
+      environment:
+        items:
+          - id: environment_env_customer_service
+            all-infra: true
+            deploy-to: <+input>
+      steps:
+        - name: Kubernetes Rolling Deploy
+          id: k8sRollingDeployStep
+          template:
+            uses: k8sRollingDeployStep
+      rollback:
+        - group:
+            steps:
+              - name: Kubernetes Rolling Rollback
+                id: k8sRollingRollbackStep
+                template:
+                  uses: k8sRollingRollbackStep
+          id: k8sRollingRollback
+          name: Kubernetes Rolling Rollback
+      on-failure:
+        errors: all
+        action: stage-rollback
+      runtime: cloud
