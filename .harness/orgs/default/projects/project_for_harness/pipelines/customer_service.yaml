@@ -49,6 +49,9 @@ pipeline:
           id: k8sRollingDeployStep
           template:
             uses: k8sRollingDeployStep
+            with:
+              manifests:
+                - charts/microservice
       rollback:
         - group:
             steps:
