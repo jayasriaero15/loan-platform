@@ -1,10 +1,17 @@
 pipeline:
+  description: Clones the loan-platform repo and builds customer-service with Maven on Java 17.
+  tags:
+    ai_generated: ""
   stages:
     - steps:
         - run:
-            script: "git clone https://github.com/jayasriaero15/loan-platform.git && mvn -f
-              loan-platform/services/customer-service/pom.xml -B clean package
-              #"
+            container:
+              image: maven:3.9-eclipse-temurin-17
+            script: |-
+              java -version
+              mvn -version
+              git clone https://github.com/jayasriaero15/loan-platform.git
+              mvn -f loan-platform/services/customer-service/pom.xml -B clean package
             shell: bash
           name: git clone and maven build
           id: git_clone_and_maven_build
