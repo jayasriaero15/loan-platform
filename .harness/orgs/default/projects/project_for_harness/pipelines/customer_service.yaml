@@ -25,8 +25,7 @@ pipeline:
               project_id: project-76f55662-b24c-481a-88e
               image_name: spring-app-repo/customer-service
               tags:
-                - <+pipeline.sequenceId>
-                - <+pipeline.gitCommit>
+                - latest
               caching: true
               dockerfile: loan-platform/services/customer-service/Dockerfile
               context: loan-platform/services/customer-service
