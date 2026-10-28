@@ -1,5 +1,6 @@
 pipeline:
-  description: Clones the loan-platform repo and builds customer-service with Maven on Java 17.
+  description: Clones the loan-platform repo and builds customer-service with
+    Maven on Java 17.
   tags:
     ai_generated: ""
   stages:
@@ -15,5 +16,19 @@ pipeline:
             shell: bash
           name: git clone and maven build
           id: git_clone_and_maven_build
+        - name: customer-service docker build
+          id: customer_service_docker_build
+          build:
+            uses: buildAndPushToGAR
+            with:
+              connector: connector_Gcp_c109
+              host: asia-south1-docker.pkg.dev
+              project_id: project-76f55662-b24c-481a-88e
+              image_name: spring-app-repo/customer-service
+              tags:
+                - ${pipeline.sequenceId}
+              caching: true
+              dockerfile: loan-platform/services/customer-service/Dockerfile
+              context: customer-service
       name: git clone and build
       id: git_clone_and_build
