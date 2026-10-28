@@ -1,6 +1,5 @@
 pipeline:
-  description: Clones the loan-platform repo and builds customer-service with
-    Maven on Java 17.
+  description: Clones the loan-platform repo and builds customer-service with Maven on Java 17.
   tags:
     ai_generated: ""
   stages:
@@ -42,8 +41,7 @@ pipeline:
       environment:
         items:
           - id: environment_env_customer_service
-            all-infra: true
-            deploy-to: <+input>
+            deploy-to: infrastructure_kubernetes_7fa9
       steps:
         - name: Kubernetes Rolling Deploy
           id: k8sRollingDeployStep
@@ -61,4 +59,7 @@ pipeline:
       on-failure:
         errors: all
         action: stage-rollback
-      runtime: cloud
+      runtime:
+        kubernetes:
+          connector: gke_learning_cluster
+          namespace: default
