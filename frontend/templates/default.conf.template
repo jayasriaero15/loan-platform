@@ -8,16 +8,18 @@ server {
     location = /healthz { return 200 'ok'; add_header Content-Type text/plain; }
 
     location /api/loans {
-        set $loan http://loan-service:8080;
-        proxy_pass $loan;
-    }
-    location /api/customers {
-        set $cust http://customer-service:8080;
-        proxy_pass $cust;
-    }
-    location /api/documents {
-        client_max_body_size 10m;
-        set $doc http://document-service:8080;
-        proxy_pass $doc;
-    }
+    set $loan http://loan-service.loan-service.svc.cluster.local:8080;
+    proxy_pass $loan;
+}
+
+location /api/customers {
+    set $cust http://customer-service.customer-service.svc.cluster.local:8080;
+    proxy_pass $cust;
+}
+
+location /api/documents {
+    client_max_body_size 10m;
+    set $doc http://document-service.document-service.svc.cluster.local:8080;
+    proxy_pass $doc;
+}
 }
